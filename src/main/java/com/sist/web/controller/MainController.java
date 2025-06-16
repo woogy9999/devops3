@@ -36,7 +36,7 @@ public class MainController {
 		map.put("start", start);
 		map.put("end", end);
 		
-		List<CampVO> list=cService.campListData(map);
+		List<CampVO> list=cService.campListData(map); 
 		int totalpage=cService.campTotalPage();
 		 
 		final int BLOCK=10; 
