@@ -38,7 +38,7 @@ public class MainController {
 		
 		List<CampVO> list=cService.campListData(map);
 		int totalpage=cService.campTotalPage();
-		
+		 
 		final int BLOCK=10;
 		int startPage=((curpage-1)/BLOCK*BLOCK)+1;
 		int endPage=((curpage-1)/BLOCK*BLOCK)+BLOCK;
