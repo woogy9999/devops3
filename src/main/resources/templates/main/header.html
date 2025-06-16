@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<style>
+  .navbar-custom {
+    background-color: #f8f9fa;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .navbar-custom .navbar-brand {
+    color: #343a40;
+    font-weight: bold;
+  }
+
+  .navbar-custom .navbar-nav > li > a {
+    color: #495057;
+    font-weight: 500;
+    transition: color 0.2s ease-in-out;
+  }
+
+  .navbar-custom .navbar-nav > li > a:hover,
+  .navbar-custom .navbar-nav > .active > a {
+    color: #007bff;
+    background-color: transparent;
+  }
+
+  .navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+</style>
+
+</head>
+<body>
+  
+<nav class="navbar navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">CI/CD</a>
+    </div>
+
+    <ul class="nav navbar-nav navbar-center">
+      <li class="active"><a href="/main">캠핑 리스트</a></li>
+      <li><a href="/camp/find">캠핑 검색</a></li>
+      <li><a href="/board/list">게시판</a></li>
+    </ul>  
+  </div>
+</nav>
+</body>
+</html>

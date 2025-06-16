@@ -7,7 +7,7 @@ import com.sist.web.vo.*;
 @Controller
 public class CampController {
 	
-	@GetMapping("/main")
+	@GetMapping("/")
 	public String main_page(){
 		return "main";
 	}
