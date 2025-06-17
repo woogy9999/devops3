@@ -1,5 +1,6 @@
 # 1. Build
 FROM gradle:7.6.0-jdk17-alpine AS builder
+USER root
 COPY . /app
 WORKDIR /app
 RUN gradle build --no-daemon
