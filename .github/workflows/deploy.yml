@@ -49,12 +49,14 @@ jobs:
 
       - name: Copy Docker image to server with rsync
         run: |
-          rsync -avz -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" spring-app.tar ubuntu@43.203.225.194:~/spring-app.tar
-
+          rsync -avz -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" spring-app.tar ubuntu@43.203.225.194:~/app/spring-app.tar
 
       - name: Load and run Docker image on server
         run: |
           ssh ubuntu@43.203.225.194 << 'EOF'
+            cd ~/app || git clone https://github.com/woogy9999/devops3.git ~/app
+            cd ~/app
+            git pull origin main
             docker stop spring-app || true
             docker rm spring-app || true
             docker load -i spring-app.tar
