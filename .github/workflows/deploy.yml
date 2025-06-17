@@ -62,8 +62,10 @@ jobs:
       - name: Add known hosts
         run: ssh-keyscan -t ed25519 43.203.225.194 >> ~/.ssh/known_hosts
 
-      - name: Upload ZIP to EC2
-        run: scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no app-deploy.zip ubuntu@43.203.225.194:~/app/app-deploy.zip
+      - name: Upload ZIP to EC2 via rsync
+        run: |
+          sudo apt-get update && sudo apt-get install -y rsync
+          rsync -avz -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" app-deploy.zip ubuntu@43.203.225.194:~/app/app-deploy.zip
 
       - name: SSH to EC2 and deploy
         run: |
