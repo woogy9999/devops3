@@ -2,4 +2,4 @@
 build
 !build/libs/*.jar
 Dockerfile
-*.md
+*.md 
