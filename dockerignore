@@ -1,5 +1,14 @@
+
+.git
+.gitignore
 .gradle
+.idea
+.vscode
+node_modules
 build
+test
+docs
+*.log
+*.md
+
 !build/libs/*.jar
-Dockerfile
-*.md    
