@@ -9,4 +9,4 @@ FROM eclipse-temurin:17.0.10_7-jre-alpine
 COPY --from=builder /app/build/libs/*.jar app.jar
 ENTRYPOINT [ "java","-jar","/app.jar" ]
 
-# MB 
+# MB  
