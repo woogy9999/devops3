@@ -1,4 +1,4 @@
-name: Deploy with Docker to Ubuntu Server
+name: Deploy with Docker to Ubuntu Server (B안)
 
 on:
   push:
@@ -25,13 +25,8 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build -x test
 
-      - name: Build Docker image
-        run: |
-          docker build -t spring-app:latest .
-
-      - name: Save Docker image to tar
-        run: |
-          docker save -o spring-app.tar spring-app:latest
+      - name: Rename jar to app.jar
+        run: cp build/libs/*SNAPSHOT.jar build/libs/app.jar
 
       - name: Set up SSH key
         run: |
@@ -47,18 +42,18 @@ jobs:
       - name: Add known hosts
         run: ssh-keyscan -t ed25519 43.203.225.194 >> ~/.ssh/known_hosts
 
-      - name: Copy Docker image to server with rsync
+      - name: Upload JAR and Dockerfile to server
         run: |
-          rsync -avz -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" spring-app.tar ubuntu@43.203.225.194:~/app/spring-app.tar
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no build/libs/app.jar ubuntu@43.203.225.194:~/app/app.jar
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no Dockerfile ubuntu@43.203.225.194:~/app/Dockerfile
 
-      - name: Load and run Docker image on server
+      - name: Build and Run Docker image on server
         run: |
-          ssh ubuntu@43.203.225.194 << 'EOF'
-            cd ~/app || git clone https://github.com/woogy9999/devops3.git ~/app
+          ssh -i ~/.ssh/id_ed25519 ubuntu@43.203.225.194 << 'EOF'
             cd ~/app
-            git pull origin main
-            docker stop spring-app || true
-            docker rm spring-app || true
-            docker load -i spring-app.tar
-            docker run -d --name spring-app -p 8080:8080 spring-app:latest
+            sudo docker stop spring-app || true
+            sudo docker rm spring-app || true
+            sudo docker rmi spring-app:latest || true
+            sudo docker build -t spring-app:latest .
+            sudo docker run -d --name spring-app -p 8080:8080 --restart unless-stopped spring-app:latest
           EOF
