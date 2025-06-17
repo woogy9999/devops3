@@ -47,9 +47,10 @@ jobs:
       - name: Add known hosts
         run: ssh-keyscan -t ed25519 43.203.225.194 >> ~/.ssh/known_hosts
 
-      - name: Copy Docker image to server
+      - name: Copy Docker image to server with rsync
         run: |
-          scp spring-app.tar ubuntu@43.203.225.194:~/spring-app.tar
+          rsync -avz -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" spring-app.tar ubuntu@43.203.225.194:~/spring-app.tar
+
 
       - name: Load and run Docker image on server
         run: |
