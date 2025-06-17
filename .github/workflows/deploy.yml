@@ -1,0 +1,61 @@
+name: Deploy with Docker to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set gradlew permissions
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build -x test
+
+      - name: Build Docker image
+        run: |
+          docker build -t spring-app:latest .
+
+      - name: Save Docker image to tar
+        run: |
+          docker save -o spring-app.tar spring-app:latest
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+
+      - name: Add known hosts
+        run: ssh-keyscan -t ed25519 43.203.225.194 >> ~/.ssh/known_hosts
+
+      - name: Copy Docker image to server
+        run: |
+          scp spring-app.tar ubuntu@43.203.225.194:~/spring-app.tar
+
+      - name: Load and run Docker image on server
+        run: |
+          ssh ubuntu@43.203.225.194 << 'EOF'
+            docker stop spring-app || true
+            docker rm spring-app || true
+            docker load -i spring-app.tar
+            docker run -d --name spring-app -p 8080:8080 spring-app:latest
+          EOF
