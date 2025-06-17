@@ -62,7 +62,7 @@ jobs:
 
       - name: Upload JAR and Dockerfile to server
         run: |
-          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no build/libs/app.jar ubuntu@43.203.225.194:~/app/app.jar
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no app.jar ubuntu@43.203.225.194:~/app/app.jar
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no Dockerfile ubuntu@43.203.225.194:~/app/Dockerfile
 
       - name: Build and Run Docker image on server
